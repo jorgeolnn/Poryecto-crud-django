@@ -1,0 +1,52 @@
+<!-- productos/templates/productos/registration/profile.html -->
+{% extends "productos/base.html" %}
+
+{% block title %}Mi Perfil{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body" style="background-color: #2a475e;">
+                    <h2 style="color: white;">Perfil de Usuario</h2>
+                    <hr>
+
+                    <!-- Mostrar datos en formato tabla -->
+                    <table class="table table-bordered">
+                        <tbody style="color: white;">
+                            <tr>
+                                <th>Nombre de Usuario:</th>
+                                <td>{{ user.username }}</td>
+                            </tr>
+                            <tr>
+                                <th>Nombre:</th>
+                                <td>{{ user.first_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Apellido:</th>
+                                <td>{{ user.last_name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Correo Electrónico:</th>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th>Residencia:</th>
+                                <td>{{ user.profile.residencia }}</td>
+                            </tr>
+                            <tr>
+                                <th>Estado Civil:</th>
+                                <td>{{ user.profile.estado_civil }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Botón para editar perfil -->
+                    <a href="{% url 'profile_edit' %}" class="btn btn-primary">Modificar Perfil</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
