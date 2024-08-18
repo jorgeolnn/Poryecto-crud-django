@@ -38,6 +38,8 @@ class Producto(models.Model):
     marca = models.ForeignKey(Marca, on_delete=models.PROTECT)
     fecha_fabricacion = models.DateField()
     imagen = models.ImageField(upload_to="productos", null=True)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+  # Relación con el usuario
 
     def __str__(self):
         return self.nombre

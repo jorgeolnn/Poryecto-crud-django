@@ -104,7 +104,9 @@ def agregar_producto(request):
     if request.method == 'POST':
         formulario = ProductoForm(data=request.POST, files=request.FILES)
         if formulario.is_valid():
-            formulario.save()
+            producto = formulario.save(commit=False)  # No guardar aún
+            producto.usuario = request.user  # Asignar el producto al usuario autenticado
+            producto.save()  # Ahora guardar
             messages.success(request, "Producto registrado")
             return redirect('agregar_producto')  # Redirige después de guardar
     else:
@@ -112,13 +114,14 @@ def agregar_producto(request):
     return render(request, 'agregacion/agregar.html', {'form': formulario})
 
 
-@permission_required('productos.view_producto')
 def listar_productos(request):
-    productos = Producto.objects.all()
+    if request.user.is_superuser:
+        productos = Producto.objects.all()
+    else:
+        productos = Producto.objects.filter(usuario=request.user)
+
     page = request.GET.get('page', 1)
-       # data = {
-    #     'productos': productos
-    # }
+
     try:
         paginator = Paginator(productos, 5)
         productos = paginator.page(page)
@@ -127,7 +130,8 @@ def listar_productos(request):
 
     data = {
         'entity': productos,
-        'paginator': paginator
+        'paginator': paginator,
+        'is_admin': request.user.is_superuser
     }
     return render(request, 'agregacion/listar.html', data)
 
