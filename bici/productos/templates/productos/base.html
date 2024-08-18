@@ -66,8 +66,11 @@
       <!-- Enlaces de autenticación -->
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> Carrito</a>
-        </li>
+          <a class="nav-link" href="#">
+              <i class="fas fa-shopping-cart"></i> Carrito 
+              <span id="cart-count" class="badge badge-pill badge-primary">0</span>
+          </a>
+      </li>
         {% if perms.productos.add_producto %}
         <li class="nav-item">
           <a href="{% url 'agregar_producto' %}" class="nav-link">Agregar Producto</a>
