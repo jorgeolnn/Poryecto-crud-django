@@ -32,6 +32,22 @@
     }
   </style>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const cartCountElement = document.getElementById('cart-count');
+      const cart = JSON.parse(localStorage.getItem('cart')) || {};
+      let totalItems = 0;
+
+      for (const productId in cart) {
+          if (cart.hasOwnProperty(productId)) {
+              totalItems += cart[productId].quantity;
+          }
+      }
+
+      cartCountElement.textContent = totalItems;
+  });
+</script>
+
 </head>
 
 <body class="body">
@@ -67,9 +83,9 @@
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
           <a class="nav-link" href="#">
-              <i class="fas fa-shopping-cart"></i> Carrito 
-              <span id="cart-count" class="badge badge-pill badge-primary">0</span>
-          </a>
+            <i class="fas fa-shopping-cart"></i> Carrito 
+            <span id="cart-count" class="badge badge-pill badge-primary">0</span>
+        </a>
       </li>
         {% if perms.productos.add_producto %}
         <li class="nav-item">

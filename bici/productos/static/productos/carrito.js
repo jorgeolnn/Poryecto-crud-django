@@ -1,12 +1,11 @@
 function formatonumero2(numero) {
-    // Utiliza Intl.NumberFormat para formatear el número con la configuración regional de CLP (Chile)
     let formattedNumber = new Intl.NumberFormat("es-CL").format(numero);
-    // Reemplaza la coma con punto para asegurarse de que el formato sea consistente
     return formattedNumber.replace(",", ".");
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    const cart = {}; // Objeto para almacenar los productos en el carrito
+    // Cargar el carrito desde localStorage
+    const cart = JSON.parse(localStorage.getItem('cart')) || {}; 
 
     function updateCartUI() {
         const cartItemsContainer = document.getElementById('cart-items');
@@ -47,7 +46,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Actualiza el estado de los botones de agregar al carrito
         updateAddToCartButtons();
     }
-    
+
+    function saveCartToLocalStorage() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
 
     function updateAddToCartButtons() {
         document.querySelectorAll('.add-to-cart').forEach(button => {
@@ -89,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
             cart[productId] = { id: productId, name: name, price: price, quantity: 1, stock: stock };
         }
         updateCartUI();
+        saveCartToLocalStorage(); // Guarda el carrito en localStorage
     }
 
     function removeFromCart(productId) {
@@ -99,6 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 delete cart[productId];
             }
             updateCartUI();
+            saveCartToLocalStorage(); // Guarda el carrito en localStorage
         }
     }
 
@@ -127,7 +131,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Inicializa el estado de los botones al cargar la página
     updateAddToCartButtons();
+    updateCartUI();
 });
+
 
 
 
