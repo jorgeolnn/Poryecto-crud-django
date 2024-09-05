@@ -66,7 +66,7 @@ class ProductoForm(forms.ModelForm):
 
     class Meta:
         model = Producto
-        fields = ['nombre', 'precio', 'descripcion', 'nuevo', 'marca', 'fecha_fabricacion', 'imagen']
+        fields = ['nombre', 'precio', 'descripcion', 'nuevo', 'marca', 'stock','fecha_fabricacion', 'imagen']
         widgets = {
             "fecha_fabricacion": forms.SelectDateWidget()
         }

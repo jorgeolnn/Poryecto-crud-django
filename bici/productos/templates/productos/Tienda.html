@@ -30,11 +30,13 @@
                 <h5>${{ p.precio | intcomma }}</h5>
               </div>
               <button type="button" class="btn btn-primary add-to-cart"
-                      data-product-id="{{ p.id }}"
-                      data-product-name="{{ p.nombre }}"
-                      data-product-price="{{ p.precio }}">
-                <i class="fas fa-shopping-cart"></i> Añadir al carrito
-              </button>
+        data-product-id="{{ p.id }}"
+        data-product-name="{{ p.nombre }}"
+        data-product-price="{{ p.precio }}"
+        data-product-stock="{{ p.stock }}">
+    <i class="fas fa-shopping-cart"></i> Añadir al carrito
+</button>
+
             </div>
           </div>
         {% endfor %}

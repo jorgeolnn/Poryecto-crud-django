@@ -38,6 +38,7 @@ class Producto(models.Model):
     marca = models.ForeignKey(Marca, on_delete=models.PROTECT)
     fecha_fabricacion = models.DateField()
     imagen = models.ImageField(upload_to="productos", null=True)
+    stock = models.IntegerField(default=0, verbose_name='Stock')
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
   # Relación con el usuario
 

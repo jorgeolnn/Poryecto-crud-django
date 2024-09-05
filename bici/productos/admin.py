@@ -5,7 +5,7 @@ from .forms import ProductoForm
 
 # Register your models here.
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'precio', 'descripcion', 'nuevo', 'marca', 'fecha_fabricacion', 'usuario')
+    list_display = ('nombre', 'precio', 'descripcion', 'nuevo', 'marca', 'stock','fecha_fabricacion', 'usuario')
     
     def get_queryset(self, request):
         qs = super().get_queryset(request)
