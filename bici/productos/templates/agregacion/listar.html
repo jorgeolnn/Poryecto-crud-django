@@ -30,60 +30,65 @@
 <center>
 <div class="container mt-5">
     
-        <div class="card-body">
-            <h2 style="color: white;">Listado de Productos</h2>
+    <div class="card-body">
+        <h2 style="color: white;">Listado de Productos</h2>
+        <hr>
+        {% if is_admin %}
+        <div class="mb-3">
+            <a href="{% url 'manage_permissions' %}" class="btn btn-primary">Gestionar Permisos</a>
+        </div>
+        {% endif %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-responsive-sm mx-auto" style="max-width: 100%; background-color: #2a475e;">
+                <thead>
+                    <tr style="color: white;">
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Marca</th>
+                        <th>¿Nuevo?</th>
+                        <th>Stock</th>
+                        {% if is_admin %}
+                        <th>Usuario</th>
+                        {% endif %}
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in entity %}
+                    <tr style="color: white;">
+                        <td>{{ p.nombre | title }}</td>
+                        <td>${{ p.precio | intcomma }}</td>
+                        <td>{{ p.marca | title }}</td>
+                        <td>
+                            {% if p.nuevo %}
+                            SI
+                            {% else %}
+                            NO
+                            {% endif %}
+                        </td>
+                        <td>{{ p.stock }}</td>
+                        {% if is_admin %}
+                        <td>{{ p.usuario.username }}</td>
+                        {% endif %}
+                        <td>
+                            {% if perms.productos.change_producto %}
+                            <a href="{% url 'modificar_producto' p.id %}" class="btn btn-info btn-sm">Modificar</a>
+                            {% endif %}
+                            {% if perms.productos.delete_producto %}
+                            <a href="#" onclick="eliminarProducto({{ p.id }})" class="btn btn-danger btn-sm">Eliminar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             <hr>
-            <div class="table-responsive">
-                <table class="table table-striped table-hover table-responsive-sm mx-auto" style="max-width: 100%; background-color: #2a475e;">
-                    <thead>
-                        <tr style="color: white;">
-                            <th>Nombre</th>
-                            <th>Precio</th>
-                            <th>Marca</th>
-                            <th>¿Nuevo?</th>
-                            <th>Stock</th>
-                            {% if is_admin %}
-                            <th>Usuario</th>
-                            {% endif %}
-                            <th>Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for p in entity %}
-                        <tr style="color: white;">
-                            <td>{{ p.nombre | title }}</td>
-                            <td>${{ p.precio | intcomma }}</td>
-                            <td>{{ p.marca | title }}</td>
-                            <td>
-                                {% if p.nuevo %}
-                                SI
-                                {% else %}
-                                NO
-                                {% endif %}
-                            </td>
-                            <td>{{ p.stock }}</td>
-                            {% if is_admin %}
-                            <td>{{ p.usuario.username }}</td>
-                            {% endif %}
-                            <td>
-                                {% if perms.productos.change_producto %}
-                                <a href="{% url 'modificar_producto' p.id %}" class="btn btn-info btn-sm">Modificar</a>
-                                {% endif %}
-                                {% if perms.productos.delete_producto %}
-                                <a href="#" onclick="eliminarProducto({{ p.id }})" class="btn btn-danger btn-sm">Eliminar</a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                <hr>
-                <div>
-                    {% include 'productos/paginator.html' %}
-                </div>
+            <div>
+                {% include 'productos/paginator.html' %}
             </div>
         </div>
-    
+    </div>
+
 </div>
 </center>
 {% endblock %}

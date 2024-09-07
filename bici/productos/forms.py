@@ -1,5 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from .models import Profile, Producto, Contacto
 from django import forms
 from .validators import MaxSizeFileValidator
@@ -79,5 +79,19 @@ class ContactoForm(forms.ModelForm):
         #fields = ["nombre", "correo", "tipo_consulta", "mensaje", "avisos"]
         fields = '__all__' 
 
-##CARRITO 
+class UserPermissionForm(forms.Form):
+    user = forms.ModelChoiceField(
+        queryset=User.objects.exclude(is_superuser=True),
+        label="Usuario"
+    )
+    permissions = forms.ModelMultipleChoiceField(
+        queryset=Permission.objects.filter(
+            codename__in=[
+                'add_producto', 'change_producto', 'delete_producto', 'view_producto'
+            ]
+        ),
+        widget=forms.CheckboxSelectMultiple,
+        label="Permisos",
+        required=False
+    )
 

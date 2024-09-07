@@ -4,10 +4,10 @@ from .forms import CustomUserCreationForm
 from django.http import Http404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import Profile, Producto, Product, CartItem
-from .forms import ProfileForm, UserUpdateForm, ProfileUpdateForm, ProductoForm, ContactoForm
+from .forms import ProfileForm, UserUpdateForm, ProfileUpdateForm, ProductoForm, ContactoForm, UserPermissionForm
 from django.core.paginator import Paginator
 # Create your views here.
 def home(request):
@@ -170,7 +170,22 @@ def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
     return render(request, 'compra/detalle_producto.html', {'producto': producto})
 
-#Carrito de compra
 
 
+@permission_required('auth.change_user')
+def manage_permissions(request):
+    if request.method == 'POST':
+        form = UserPermissionForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data['user']
+            permissions = form.cleaned_data['permissions']
+            # Actualizar los permisos del usuario
+            user.user_permissions.set(permissions)
+            user.save()
+            messages.success(request, "Permisos Otorgados Correctamente")
+            return redirect('manage_permissions')  # Redirige a la misma página o a una página de éxito
+    else:
+        form = UserPermissionForm()
+    
+    return render(request, 'productos/manage_permissions.html', {'form': form})
 
