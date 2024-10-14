@@ -6,6 +6,7 @@ from .validators import MaxSizeFileValidator
 from django.forms import ValidationError
 from django.core.validators import FileExtensionValidator
 
+
 # from PIL import Image
 # Registro de usuarios, perfil, login.
 class CustomUserCreationForm(UserCreationForm): 

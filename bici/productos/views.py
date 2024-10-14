@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User, Permission
 from django.contrib.auth.forms import PasswordChangeForm
-from .models import Profile, Producto, Product, CartItem
+from .models import Profile, Producto, Product, CartItem, Categoria
 from .forms import ProfileForm, UserUpdateForm, ProfileUpdateForm, ProductoForm, ContactoForm, UserPermissionForm
 from django.core.paginator import Paginator
 # Create your views here.
@@ -15,24 +15,20 @@ def home(request):
     return render(request, "productos/home.html")
 
 # 
+
 def Tienda(request):
+    categoria_id = request.GET.get('categoria')  # Obtener el ID de la categoría desde la URL
+    if categoria_id:
+        productos = Producto.objects.filter(categoria_id=categoria_id)  # Filtrar por categoría
+    else:
+        productos = Producto.objects.all()  # Mostrar todos los productos si no hay filtro
 
-    
-    productos = Producto.objects.filter()
+    categorias = Categoria.objects.all()  # Obtener todas las categorías para el filtro
 
-    page = request.GET.get('page', 1)
-
-    try:
-        paginator = Paginator(productos, 10)
-        productos = paginator.page(page)
-    except:
-        raise Http404
-
-    data = {
+    return render(request, 'productos/Tienda.html', {
         'entity': productos,
-        'paginator': paginator,
-    }
-    return render(request, "productos/Tienda.html", data)
+        'categorias': categorias,
+    })
 
 #
 def servicio(request):

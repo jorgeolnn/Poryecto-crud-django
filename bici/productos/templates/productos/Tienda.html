@@ -11,8 +11,74 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  <style>
+    .dropbtn {
+      background-color: #04AA6D;
+      color: white;
+      padding: 16px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+    }
+    
+    .dropbtn:hover, .dropbtn:focus {
+      background-color: #3e8e41;
+    }
+    
+    #myInput {
+      box-sizing: border-box;
+      background-image: url('searchicon.png');
+      background-position: 14px 12px;
+      background-repeat: no-repeat;
+      font-size: 16px;
+      padding: 14px 20px 12px 45px;
+      border: none;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    #myInput:focus {outline: 3px solid #ddd;}
+    
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f6f6f6;
+      min-width: 230px;
+      overflow: auto;
+      border: 1px solid #ddd;
+      z-index: 1;
+    }
+    
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+    
+    .dropdown a:hover {background-color: #ddd;}
+    
+    .show {display: block;}
+    </style>
 </head>
 <body>
+  <div class="container">
+    <div class="dropdown">
+      <button onclick="myFunction()" class="dropbtn">Filtro</button>
+      <div id="myDropdown" class="dropdown-content">
+        <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+        {% for c in categorias %}
+            <a href="?categoria={{ c.id }}">{{ c.nombre | capfirst }}</a>  <!-- Cambia a 'c.nombre' para mostrar el nombre de la categoría -->
+        {% endfor %}
+    </div>
+    </div>
+
+
+  </div>
   {% load humanize %}
   <div style="max-width: 1200px; margin: 0 auto; padding: 20px;">
     <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; ">
@@ -25,9 +91,9 @@
               </a>
               {% endif %}
               <div style="padding: 16px; color: white;">
-                <h6>{{ p.marca | capfirst }}</h6>
+                <h6>{{ p.categoria | capfirst }}</h6>
                 <h5>{{ p.nombre | title }}</h5>
-                <h5>${{ p.precio | intcomma }}</h5>
+                <h5><span class="precio">${{ p.precio }}</span></h5>
               </div>
               <button type="button" class="btn btn-primary add-to-cart"
         data-product-id="{{ p.id }}"
@@ -57,6 +123,58 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'productos/carrito.js' %}"></script>
+<script>
+  /* When the user clicks on the button,
+  toggle between hiding and showing the dropdown content */
+ // Esta función se llama cuando el usuario hace clic en el botón para mostrar u ocultar el menú desplegable
+function myFunction() {
+    // Obtener el menú desplegable por su ID
+    const dropdownMenu = document.getElementById("myDropdown");
+    // Alternar la clase "show" para mostrar u ocultar el menú
+    dropdownMenu.classList.toggle("show");
+}
+
+// Esta función se llama cuando el usuario escribe en el campo de búsqueda
+function filterFunction() {
+    // Obtener el texto ingresado por el usuario en el campo de búsqueda
+    const inputField = document.getElementById("myInput");
+    // Convertir el texto a mayúsculas para que la comparación sea insensible a mayúsculas/minúsculas
+    const filterText = inputField.value.toUpperCase();
+    // Obtener el menú desplegable por su ID
+    const dropdownMenu = document.getElementById("myDropdown");
+    // Obtener todos los enlaces dentro del menú desplegable
+    const links = dropdownMenu.getElementsByTagName("a");
+
+    // Iterar sobre cada enlace para aplicar el filtro
+    for (let i = 0; i < links.length; i++) {
+        // Obtener el texto del enlace actual
+        const linkText = links[i].textContent || links[i].innerText;
+        // Comprobar si el texto del enlace incluye el texto de búsqueda
+        if (linkText.toUpperCase().indexOf(filterText) > -1) {
+            // Si hay una coincidencia, mostrar el enlace
+            links[i].style.display = ""; // Mostrar el enlace
+        } else {
+            // Si no hay coincidencia, ocultar el enlace
+            links[i].style.display = "none"; // Ocultar el enlace
+        }
+    }
+}
+  </script>
+
+<script>
+  document.querySelectorAll('.precio').forEach(function(element) {
+        // Obtén el texto y elimina el símbolo de dólar
+        const precioTexto = element.textContent.replace('$', '').replace('.', '').replace(',', '.');
+        const precio = parseFloat(precioTexto); // Convierte a float
+        
+        // Aplica formato con puntos como separador de miles
+        if (!isNaN(precio)) { // Verifica que el valor sea un número
+            element.textContent = '$' + precio.toLocaleString('es-ES');
+        } else {
+            element.textContent = '$0'; // Maneja caso de error o precio no válido
+        }
+    });
+</script>
 </body>
 </html>
 

@@ -6,7 +6,7 @@ from .views import registro, profile, profile_edit, agregar_producto, listar_pro
 urlpatterns = [
    
     path('',views.home, name="home"),
-    path('Tienda',views.Tienda, name="Tienda"),
+    path('Tienda/', views.Tienda, name="Tienda"),
     path('servicio',views.servicio, name="servicio"),
     path('Contacto',views.Contacto, name="Contacto"),
     path('login',views.login, name="login"),
