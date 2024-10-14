@@ -44,7 +44,7 @@
                     <tr style="color: white;">
                         <th>Nombre</th>
                         <th>Precio</th>
-                        <th>Marca</th>
+                        <th>Categoria</th>
                         <th>¿Nuevo?</th>
                         <th>Stock</th>
                         {% if is_admin %}
@@ -58,7 +58,7 @@
                     <tr style="color: white;">
                         <td>{{ p.nombre | title }}</td>
                         <td>${{ p.precio | intcomma }}</td>
-                        <td>{{ p.marca | title }}</td>
+                        <td>{{ p.categoria | title }}</td>
                         <td>
                             {% if p.nuevo %}
                             SI

@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Permission
-from .models import Profile, Producto, Contacto
+from .models import Profile, Producto, Contacto, Categoria
 from django import forms
 from .validators import MaxSizeFileValidator
 from django.forms import ValidationError
@@ -57,6 +57,13 @@ class ProductoForm(forms.ModelForm):
     imagen = forms.ImageField(validators=[MaxSizeFileValidator(max_file_size=2), FileExtensionValidator(allowed_extensions=['jpg', 'png', 'jpeg'], message="Solo se permiten archivos con extensiones .jpg, .png o .jpeg")])
     precio = forms.IntegerField(min_value=1, max_value=1500000)
 
+    class Meta:
+        model = Producto
+        fields = ['nombre', 'precio', 'descripcion', 'nuevo', 'categoria', 'stock', 'fecha_fabricacion', 'imagen']
+        widgets = {
+            "fecha_fabricacion": forms.SelectDateWidget()
+        }
+
     def clean_nombre(self):
         nombre = self.cleaned_data["nombre"]
         existe = Producto.objects.filter(nombre__iexact=nombre).exists()
@@ -66,7 +73,7 @@ class ProductoForm(forms.ModelForm):
 
     class Meta:
         model = Producto
-        fields = ['nombre', 'precio', 'descripcion', 'nuevo', 'marca', 'stock','fecha_fabricacion', 'imagen']
+        fields = ['nombre', 'precio', 'descripcion', 'nuevo', 'categoria', 'stock', 'fecha_fabricacion', 'imagen']
         widgets = {
             "fecha_fabricacion": forms.SelectDateWidget()
         }
