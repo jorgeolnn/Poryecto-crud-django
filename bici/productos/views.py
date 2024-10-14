@@ -16,9 +16,21 @@ def home(request):
 
 # 
 def Tienda(request):
-    productos = Producto.objects.all()
+
+    
+    productos = Producto.objects.filter()
+
+    page = request.GET.get('page', 1)
+
+    try:
+        paginator = Paginator(productos, 10)
+        productos = paginator.page(page)
+    except:
+        raise Http404
+
     data = {
-        'productos': productos
+        'entity': productos,
+        'paginator': paginator,
     }
     return render(request, "productos/Tienda.html", data)
 
