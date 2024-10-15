@@ -197,3 +197,24 @@ def manage_permissions(request):
     
     return render(request, 'productos/manage_permissions.html', {'form': form})
 
+def obtener_productos_del_carrito(request):
+    carrito = request.session.get('carrito', {})  # Asumiendo que guardas el carrito en la sesión
+    productos = []
+    
+    for producto_id, cantidad in carrito.items():
+        producto = Producto.objects.get(id=producto_id)  # Asegúrate de manejar excepciones aquí
+        producto.cantidad = cantidad  # Agregamos la cantidad al objeto del producto
+        productos.append(producto)
+
+    return productos
+
+def detalle_compra(request):
+    # Suponiendo que tienes una forma de obtener los productos del carrito
+    productos = obtener_productos_del_carrito(request)  # Asegúrate de implementar esta función
+    total_compra = sum(producto.precio * producto.cantidad for producto in productos)  # Ajusta según tu lógica
+
+    context = {
+        'productos': productos,
+        'total_compra': total_compra,
+    }
+    return render(request, 'compra/detalle_compra.html', context)
