@@ -87,3 +87,11 @@ class CartItem(models.Model):
 
 
 ###########################################3333
+class Resena(models.Model):
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    comentario = models.TextField()
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comentario de {self.usuario.username} sobre {self.producto.nombre}"

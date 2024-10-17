@@ -28,6 +28,42 @@
     </div>
 </div>
 
+<form method="post">
+    {% csrf_token %}
+    {{ form }}  <!-- Esto renderiza el formulario completo -->
+    <button type="submit" class="btn btn-primary">Agregar Comentario</button>
+</form>
+
+<!-- <form method="post">
+    {% csrf_token %}
+    <div>
+      <label for="id_comentario">Escribe tu comentario:</label>
+      {{ form }}
+    </div>
+    <button type="submit">Agregar Comentario</button>
+  </form> -->
+
+  <h3>Comentarios</h3>
+  <div class="comentarios" style="color: white;">
+      {% if resenas %}
+          {% for resena in resenas %}
+              <div class="comentario">
+                  <strong>{{ resena.usuario.username }}</strong>
+                  <p>{{ resena.comentario }}</p>
+                  <span class="fecha">{{ resena.fecha_creacion }}</span>
+              </div>
+          {% endfor %}
+      {% else %}
+          <p>No hay comentarios aún.</p>
+      {% endif %}
+  </div>
+
+
+
+
+  <!-- <a href="{% url 'detalle_producto' producto.id %}">Volver al producto</a> -->
+
+
 <div id="cart-container"
     style="display: none; position: fixed; top: 10px; right: 10px; background: white; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
     <h4>Carrito</h4>

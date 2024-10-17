@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Permission
-from .models import Profile, Producto, Contacto, Categoria
+from .models import Profile, Producto, Contacto, Categoria, Resena
 from django import forms
 from .validators import MaxSizeFileValidator
 from django.forms import ValidationError
@@ -103,3 +103,16 @@ class UserPermissionForm(forms.Form):
         required=False
     )
 
+class ComentarioForm(forms.ModelForm):
+    class Meta:
+        model = Resena
+        fields = ['comentario']
+        widgets = {
+            'comentario': forms.Textarea(attrs={
+                'rows': 4,         # Número de filas del textarea
+                'cols': 50,        # Número de columnas del textarea
+                'placeholder': 'Escribe tu comentario aquí...',  # Texto de ayuda
+                'class': 'form-control',  # Clases de CSS para Bootstrap (opcional)
+                'required': True,  # Hace que el campo sea obligatorio
+            }),
+        }

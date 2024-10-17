@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Categoria, Producto, Contacto
+from .models import Profile, Categoria, Producto, Contacto, Resena
 from .forms import ProductoForm
 
 
@@ -22,4 +22,4 @@ admin.site.register(Profile)
 admin.site.register(Categoria)
 admin.site.register(Producto, ProductoAdmin)
 admin.site.register(Contacto)
-
+admin.site.register(Resena)

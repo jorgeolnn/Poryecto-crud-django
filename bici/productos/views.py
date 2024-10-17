@@ -6,8 +6,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User, Permission
 from django.contrib.auth.forms import PasswordChangeForm
-from .models import Profile, Producto, Product, CartItem, Categoria
-from .forms import ProfileForm, UserUpdateForm, ProfileUpdateForm, ProductoForm, ContactoForm, UserPermissionForm
+from .models import Profile, Producto, Product, CartItem, Categoria, Resena
+from .forms import ProfileForm, UserUpdateForm, ProfileUpdateForm, ProductoForm, ContactoForm, UserPermissionForm, ComentarioForm
 from django.core.paginator import Paginator
 # Create your views here.
 def home(request):
@@ -174,10 +174,6 @@ def eliminar_producto(request, id):
     return redirect(to="listar_productos")
 
 #
-def detalle_producto(request, producto_id):
-    producto = get_object_or_404(Producto, id=producto_id)
-    return render(request, 'compra/detalle_producto.html', {'producto': producto})
-
 
 
 @permission_required('auth.change_user')
@@ -218,3 +214,47 @@ def detalle_compra(request):
         'total_compra': total_compra,
     }
     return render(request, 'compra/detalle_compra.html', context)
+
+@login_required
+def agregar_comentario(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    
+    if request.method == 'POST':
+        form = ComentarioForm(request.POST)
+        if form.is_valid():
+            comentario = form.save(commit=False)
+            comentario.producto = producto
+            comentario.usuario = request.user
+            comentario.save()
+            return redirect('detalle_producto', producto_id=producto.id)  # Cambia según tu vista de detalle
+    else:
+        form = ComentarioForm()
+
+    return render(request, 'productos/agregar_comentario.html', {'form': form, 'producto': producto})
+
+
+def detalle_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    resenas = Resena.objects.filter(producto=producto).order_by('-fecha_creacion')
+
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            form = ComentarioForm(request.POST)
+            if form.is_valid():
+                nueva_resena = form.save(commit=False)
+                nueva_resena.producto = producto
+                nueva_resena.usuario = request.user  # Asigna el usuario autenticado
+                nueva_resena.save()
+                return redirect('detalle_producto', producto_id=producto_id)
+        else:
+            # Redirigir al login si el usuario no está autenticado
+            return redirect('login')  # Ajusta la URL del login según tu configuración
+
+    else:
+        form = ComentarioForm()
+
+    return render(request, 'compra/detalle_producto.html', {
+        'producto': producto,
+        'resenas': resenas,
+        'form': form
+    })
