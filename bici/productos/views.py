@@ -9,6 +9,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from .models import Profile, Producto, Product, CartItem, Categoria, Resena
 from .forms import ProfileForm, UserUpdateForm, ProfileUpdateForm, ProductoForm, ContactoForm, UserPermissionForm, ComentarioForm, UpdateComentarioForm
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
 # Create your views here.
 def home(request):
 
@@ -41,13 +42,32 @@ def Contacto(request):
         'form': ContactoForm()
     }
 
-    if request.method =='POST':
+    if request.method == 'POST':
         formulario = ContactoForm(data=request.POST)
         if formulario.is_valid():
+            # Guarda el contacto en la base de datos
             formulario.save()
-            messages.success(request, "Contacto enviado")
+            # Obtiene el correo del formulario
+            correo = formulario.cleaned_data['correo']
+            nombre = formulario.cleaned_data['nombre']
+            mensaje = formulario.cleaned_data['mensaje']
+
+            # Envío del correo electrónico
+            try:
+                send_mail(
+                    f'Nuevo mensaje de contacto de {nombre}',  # Asunto del correo
+                    mensaje,  # Mensaje
+                    'tu_email@gmail.com',  # Remitente (el correo configurado en settings.py)
+                    [correo],  # Destinatario
+                    fail_silently=False,
+                )
+                messages.success(request, "Contacto enviado y correo electrónico enviado correctamente.")
+            except Exception as e:
+                messages.error(request, f"Error al enviar el correo electrónico: {str(e)}")
+
         else:
             data["form"] = formulario
+
     return render(request, "productos/Contacto.html", data)
 
 # Vistas de registro y perfil
