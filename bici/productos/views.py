@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User, Permission
 from django.contrib.auth.forms import PasswordChangeForm
 from .models import Profile, Producto, Product, CartItem, Categoria, Resena
-from .forms import ProfileForm, UserUpdateForm, ProfileUpdateForm, ProductoForm, ContactoForm, UserPermissionForm, ComentarioForm
+from .forms import ProfileForm, UserUpdateForm, ProfileUpdateForm, ProductoForm, ContactoForm, UserPermissionForm, ComentarioForm, UpdateComentarioForm
 from django.core.paginator import Paginator
 # Create your views here.
 def home(request):
@@ -245,6 +245,7 @@ def detalle_producto(request, producto_id):
                 nueva_resena.producto = producto
                 nueva_resena.usuario = request.user  # Asigna el usuario autenticado
                 nueva_resena.save()
+                messages.success(request, "Se guardó el comentario!!")
                 return redirect('detalle_producto', producto_id=producto_id)
         else:
             # Redirigir al login si el usuario no está autenticado
@@ -273,3 +274,23 @@ def eliminar_comentario(request, id, producto_id):
 
     # Redirigir de vuelta a la página del producto
     return redirect('detalle_producto', producto_id=producto_id)
+
+
+@login_required
+def editar_comentario(request, id, producto_id):
+    resena = get_object_or_404(Resena, id=id)
+
+    data = {
+        'form': UpdateComentarioForm(instance=resena),
+        'producto_id': producto_id
+    }
+
+    if request.method == 'POST':
+        formulario = UpdateComentarioForm(request.POST, instance=resena)
+        if formulario.is_valid():
+            formulario.save()
+            messages.success(request, "Se cambió el comentario!!")
+            return redirect(to="detalle_producto",  producto_id=producto_id)
+        data["form"] = formulario
+
+    return render(request, 'compra/editar_comentario.html', data)
