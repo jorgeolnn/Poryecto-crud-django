@@ -1,7 +1,7 @@
 from django.urls import path, include
 
 from productos import views
-from .views import registro, profile, profile_edit, agregar_producto, listar_productos, modificar_producto, eliminar_producto, detalle_producto,  manage_permissions, agregar_comentario
+from .views import registro, profile, profile_edit, agregar_producto, listar_productos, modificar_producto, eliminar_producto, detalle_producto,  manage_permissions, agregar_comentario, eliminar_comentario
 
 urlpatterns = [
    
@@ -22,7 +22,7 @@ urlpatterns = [
     path('detalle-producto/<int:producto_id>/', detalle_producto, name='detalle_producto'),
     path('manage-permissions/', manage_permissions, name='manage_permissions'),
     path('producto/<int:producto_id>/comentario/', agregar_comentario, name='agregar_comentario'),
-
+    path('eliminar-comentario/<int:id>/<int:producto_id>/', eliminar_comentario, name='eliminar_comentario'),
 ]
 
 

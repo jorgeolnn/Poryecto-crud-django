@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
 from .forms import CustomUserCreationForm
-from django.http import Http404
+from django.http import Http404, HttpResponseForbidden
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User, Permission
@@ -258,3 +258,18 @@ def detalle_producto(request, producto_id):
         'resenas': resenas,
         'form': form
     })
+
+@login_required
+def eliminar_comentario(request, id, producto_id):
+    # Obtener el comentario por su ID
+    resena = get_object_or_404(Resena, id=id)
+
+    # Comprobar si el usuario autenticado es el autor del comentario o un administrador
+    if request.user == resena.usuario or request.user.is_superuser:
+        resena.delete()
+        messages.success(request, 'El comentario ha sido eliminado con éxito.')
+    else:
+        messages.error(request, 'No tienes permiso para eliminar este comentario.')
+
+    # Redirigir de vuelta a la página del producto
+    return redirect('detalle_producto', producto_id=producto_id)

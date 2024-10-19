@@ -114,5 +114,6 @@ class ComentarioForm(forms.ModelForm):
                 'placeholder': 'Escribe tu comentario aquí...',  # Texto de ayuda
                 'class': 'form-control',  # Clases de CSS para Bootstrap (opcional)
                 'required': True,  # Hace que el campo sea obligatorio
+                'style': 'width:50%; height: 100px; position: relative; left: 464px; top: 60px;'
             }),
         }
