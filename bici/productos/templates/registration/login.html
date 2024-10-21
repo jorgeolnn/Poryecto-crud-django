@@ -7,21 +7,21 @@
 <div class="container">
     <div class="row">
         <div class="col-12 col-md-6 offset-md-3">
-            <div class="card">
+            <div class="card" style="height: 350px">
                 <div class="card-body" style="background-color: #2a475e;">
                     <h2 style="color: white;">Ingresa tus credenciales</h2>
                     <hr>
-                    <form action="" method="post" style="color: white;">
+                    <form action="" method="post" style="color: white; position: relative; top: 35px;">
                         {% csrf_token %}
 
                         <!-- Otros campos del formulario -->
                         {{ form }}
 
                         <!-- Botón personalizado -->
-                        <button type="submit" class="btn btn-danger float-right">Iniciar sesión</button>
+                        <button type="submit" class="btn btn-danger float-right" style="position: relative; left: -190px; top: 5px;">Iniciar sesión</button>
                     </form>
-
-                    <p class="mt-3" style="color: white;">¿No tienes una cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
+                    <a href="#" style="color: #007bff; position: relative; top: 100px;">¿Olvidó su contraseña?</a>
+                    <p class="mt-3" style="color: white; position: relative; top: 100px;">¿No tienes una cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
                 </div>
             </div>
         </div>

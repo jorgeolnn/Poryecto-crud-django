@@ -4,55 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle de Compra</title>
-    
+    <!-- Agregar Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Estilos para mejorar la presentación general */
         body {
+            background-color: #f0f2f5;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            margin-top: 50px;
+            padding: 0 15px; /* Añadir un padding horizontal para móviles */
+        }
+        .card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             padding: 20px;
+            margin: 0 auto; /* Centra el card horizontalmente */
+            width: fit-content; /* Ajusta el ancho al contenido */
         }
-        table {
+        .product-card {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .product-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .product-price {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .product-quantity {
+            font-size: 16px;
+            color: #666;
+        }
+        #cart-total {
+            font-weight: bold;
+            font-size: 20px;
+            margin-top: 30px;
+        }
+        #checkout {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
             width: 100%;
-            margin-top: 20px;
         }
-        th, td {
-            padding: 10px;
-            text-align: left;
+        #checkout:hover {
+            background-color: #218838;
         }
-        th {
-            background-color: #f2f2f2;
+
+        /* Estilo adicional para pantallas grandes */
+        @media (min-width: 992px) {
+            .custom-card {
+                position: relative;
+                left: 730px; /* Mueve el card a la izquierda en pantallas grandes */
+                width: fit-content; /* Ajusta el ancho al contenido */
+            }
         }
     </style>
 </head>
 <body>
-    {% load static %}  <!-- Agrega esta línea para cargar el tag static -->
+    {% load static %}
     
-    <h1>Detalle de Compra</h1>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Producto</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody id="cart-items">
-            {% for producto in productos %}
-                <tr>
-                    <td>{{ producto.name }}</td>
-                    <td>$ {{ producto.price|floatformat:2 }}</td>
-                    <td>{{ producto.quantity }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <div id="cart-container">
-        <h2>Detalles de Compra</h2>
-        <ul id="cart-items"></ul>
-        <h3 id="cart-total">Total: $0.00</h3>
-        <button id="checkout">Finalizar Compra</button>
+    <div class="container d-flex justify-content-center">
+        <div class="card">
+            <h1 class="text-center mb-4">Detalle de Compra</h1>
+            <div id="cart-items">
+                {% for producto in productos %}
+                    <div class="product-card">
+                        <div class="product-name">{{ producto.name }}</div>
+                        <div class="product-price">Precio: ${{ producto.price|floatformat:2 }}</div>
+                        <div class="product-quantity">Cantidad: {{ producto.quantity }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="cart-container" class="mt-4">
+                <h3 id="cart-total">Total: $0.00</h3>
+                <div class="text-right">
+                    <button id="checkout" class="btn">Finalizar Compra</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <button id="checkout" class="btn btn-primary">Proceder al Pago</button>
 
+    <!-- Agregar Bootstrap y jQuery JS -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -60,3 +104,4 @@
     <script src="{% static 'productos/anexos.js' %}"></script>
 </body>
 </html>
+
