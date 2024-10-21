@@ -9,12 +9,16 @@ from django.core.validators import FileExtensionValidator
 
 # from PIL import Image
 # Registro de usuarios, perfil, login.
-class CustomUserCreationForm(UserCreationForm): 
-    
+class CustomUserCreationForm(UserCreationForm):
+    is_vendedor = forms.BooleanField(
+        label="Registrarse como vendedor",
+        required=False,
+        initial=False,
+    )
+
     class Meta:
-        
         model = User
-        fields = ['username', "first_name", "last_name", "email", "password1", "password2"]
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
 
 class ProfileForm(forms.ModelForm):
     class Meta:

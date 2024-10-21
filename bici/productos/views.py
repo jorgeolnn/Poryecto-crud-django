@@ -72,20 +72,27 @@ def Contacto(request):
 
 # Vistas de registro y perfil
 def registro(request):
-    data = {
-        'form': CustomUserCreationForm()
-    }
-
     if request.method == 'POST':
-        formulario = CustomUserCreationForm(data=request.POST)
-        if formulario.is_valid():
-            formulario.save()
-            user = authenticate(username=formulario.cleaned_data["username"], password=formulario.cleaned_data["password1"])
-            login(request, user)  # Aquí es donde se produce la autenticación
-            messages.success(request, "Te registraste correctamente")
-            return redirect(to="home")
-        data["form"] = formulario
-    return render(request, 'registration/registro.html', data)
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            
+            # Si el usuario seleccionó registrarse como vendedor, asignar permisos
+            if form.cleaned_data['is_vendedor']:
+                permisos = Permission.objects.filter(
+                    codename__in=['add_producto', 'change_producto', 'delete_producto', 'view_producto']
+                )
+                user.user_permissions.set(permisos)
+
+            login(request, user)  # Iniciar sesión automáticamente
+            return redirect(to="home")  # Cambia por la vista que prefieras
+    else:
+        form = CustomUserCreationForm()
+
+    return render(request, 'registration/registro.html', {'form': form})  # Cambia por el nombre de tu plantilla
+
+
+
 
 #
 def profile(request):
@@ -196,22 +203,7 @@ def eliminar_producto(request, id):
 #
 
 
-@permission_required('auth.change_user')
-def manage_permissions(request):
-    if request.method == 'POST':
-        form = UserPermissionForm(request.POST)
-        if form.is_valid():
-            user = form.cleaned_data['user']
-            permissions = form.cleaned_data['permissions']
-            # Actualizar los permisos del usuario
-            user.user_permissions.set(permissions)
-            user.save()
-            messages.success(request, "Permisos Otorgados Correctamente")
-            return redirect('manage_permissions')  # Redirige a la misma página o a una página de éxito
-    else:
-        form = UserPermissionForm()
-    
-    return render(request, 'productos/manage_permissions.html', {'form': form})
+
 
 def obtener_productos_del_carrito(request):
     carrito = request.session.get('carrito', {})  # Asumiendo que guardas el carrito en la sesión
