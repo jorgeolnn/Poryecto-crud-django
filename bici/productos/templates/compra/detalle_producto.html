@@ -52,12 +52,12 @@
                   <strong style="color: white;position: relative; top: 89px; margin-left: 330px;">{{ resena.usuario.username }}</strong>
                   <p style="color: white;position: relative; top: 89px; margin-left: 330px;">{{ resena.comentario }}</p>
                   <span class="fecha" style="color: white;position: relative; top: 89px; margin-left: 330px;">{{ resena.fecha_creacion }}</span>
-                  
-                  
-                  {% if request.user == resena.usuario or request.user.is_superuser %}
+                  {% if request.user == resena.usuario %}
                   <button style="background-color: #4CAF50; color: white; padding: 8px 13px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer;">
                     <a href="{% url 'editar_comentario' resena.id producto.id %}" style="color: #ffffff;">Editar</a>
                   </button>
+                  {% endif %}
+                  {% if request.user == resena.usuario or request.user.is_superuser %}
                   <button style="background-color: #ff1e00; color: white; padding: 8px 13px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer;">
                       <a href="{% url 'eliminar_comentario' resena.id producto.id %}" style="color: #ffffff;">Eliminar</a>
                   </button>
